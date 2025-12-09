@@ -13,8 +13,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/dexidp/dex/storage"
 	sqlite3 "github.com/mattn/go-sqlite3"
+
+	"github.com/dexidp/dex/storage"
 )
 
 func TestMigrate(t *testing.T) {

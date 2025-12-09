@@ -6,6 +6,8 @@ import (
 	"log/slog"
 	"strings"
 
+	"github.com/fernet/fernet-go"
+
 	"github.com/dexidp/dex/connector/atlassiancrowd"
 	"github.com/dexidp/dex/connector/bitbucketcloud"
 	"github.com/dexidp/dex/connector/gitea"
@@ -20,7 +22,6 @@ import (
 	"github.com/dexidp/dex/connector/oidc"
 	"github.com/dexidp/dex/connector/openshift"
 	"github.com/dexidp/dex/connector/saml"
-	"github.com/fernet/fernet-go"
 )
 
 const encryptedPrefix = "encrypted:"

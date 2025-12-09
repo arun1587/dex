@@ -269,6 +269,7 @@ func createOpenShiftTestCase() connectorTestCase {
 		expectedSensitiveFields: []string{"clientSecret"},
 	}
 }
+
 func createSAMLTestCase() connectorTestCase {
 	return connectorTestCase{
 		connectorType: "saml",
