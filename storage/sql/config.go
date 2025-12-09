@@ -329,7 +329,7 @@ func (s *MySQL) open(logger *slog.Logger) (*conn, error) {
 
 	c := &conn{
 		db:                 db,
-		flavor:             &flavorSQLite3,
+		flavor:             &flavorMySQL,
 		logger:             logger,
 		alreadyExistsCheck: errCheck,
 	}
