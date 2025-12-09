@@ -329,9 +329,10 @@ func (s *MySQL) open(logger *slog.Logger) (*conn, error) {
 
 	c := &conn{
 		db:                 db,
-		flavor:             &flavorSQLite3,
+		flavor:             &flavorMySQL,
 		logger:             logger,
 		alreadyExistsCheck: errCheck,
+		encryption:         nil, // MySQL doesn't support encryption config yet
 	}
 
 	if _, err := c.migrate(); err != nil {

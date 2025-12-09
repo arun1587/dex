@@ -774,12 +774,16 @@ func scanOfflineSessions(s scanner) (o storage.OfflineSessions, err error) {
 }
 
 func (c *conn) CreateConnector(ctx context.Context, connector storage.Connector) error {
-	encryptedConfig, err := c.encryption.encryptFields(connector.Type, connector.Config)
-	if err != nil {
-		return fmt.Errorf("failed to encrypt connector fields: %w", err)
+	configToSave := connector.Config
+	if c.encryption != nil && c.encryption.IsEnabled() {
+		encryptedConfig, err := c.encryption.encryptFields(connector.Type, connector.Config)
+		if err != nil {
+			return fmt.Errorf("failed to encrypt connector fields: %w", err)
+		}
+		configToSave = encryptedConfig
 	}
 
-	_, err = c.Exec(`
+	_, err := c.Exec(`
 		insert into connector (
 			id, type, name, resource_version, config
 		)
@@ -787,7 +791,7 @@ func (c *conn) CreateConnector(ctx context.Context, connector storage.Connector)
 			$1, $2, $3, $4, $5
 		);
 	`,
-		connector.ID, connector.Type, connector.Name, connector.ResourceVersion, encryptedConfig,
+		connector.ID, connector.Type, connector.Name, connector.ResourceVersion, configToSave,
 	)
 	if err != nil {
 		if c.alreadyExistsCheck(err) {
@@ -844,7 +848,7 @@ func (c *conn) GetConnector(ctx context.Context, id string) (storage.Connector, 
 		return connector, err
 	}
 
-	if c.encryption.IsEnabled() && c.encryption.hasEncryptedFields(connector.Config) {
+	if c.encryption != nil && c.encryption.IsEnabled() && c.encryption.hasEncryptedFields(connector.Config) {
 		c.logger.Warn("connector config may not be decrypted properly",
 			"id", id,
 			"type", connector.Type)
